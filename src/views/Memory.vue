@@ -43,7 +43,7 @@
           <div class="grey--text text-center fs-14 pt-4">Congratulations</div>
           <div class="pt-8 px-4">
             <v-ons-button
-              class="w-100 text-center fo"
+              class="w-100 text-center"
               v-hammer:tap="(e)=> goClose(e, 'cancel')"
               v-hammer:press="(e)=> goClose(e, 'cancel')"
               v-hammer:pressup="(e)=> goClose(e, 'cancel')"
@@ -132,7 +132,8 @@ export default {
       startVisible: false,
       timeoverVisible: false,
       clearVisible: false,
-      isWait: false,
+      isWait: true,
+      gameParams: {}
     };
   },
   watch: {
@@ -166,16 +167,13 @@ export default {
         for(const i in this.realBoardItems){
           this.realBoardItems[i].isCover = false;
         }
-        // this.isWait = false;
+        this.isWait = false;
         clearInterval(this.setPreviewTime);
 
         this.setPreviewTime = setInterval(() => {
           this.time += 1;
         }, 1000);
       }, this.previewTime * 1000);
-
-      setTimeout(() => {
-      }, this.previewTime * 1000)
     },
     clickPiece(e, i) {
       if(this.isWait){
@@ -191,17 +189,21 @@ export default {
         }
       } else {
         this.timeoverVisible = true;
+        clearInterval(this.setPreviewTime);
         // this.isWait = true;
       }
     },
     setBoard() {
+      this.time = this.previewTime = this.gameParams.previewTime;
+
       this.answerCount = 0;
-      let randomCount = 4;
-      let totalCount = 16;
-      let random = 0;
       this.randomArr = [];
+      
+      let randomCount = this.gameParams.randomCount;
+      let totalCount = this.gameParams.totalCount;
 
       let temp = [];
+      let random = 0;
       
       while (this.randomArr.length !== randomCount) {
         random = this.makeRandom(0, totalCount - 1);
@@ -209,7 +211,6 @@ export default {
           this.randomArr.push(random);
         }
       }
-      console.log(this.randomArr)
 
       for(let i = 0 ; i < totalCount ; i++){
         temp.push({
@@ -220,7 +221,6 @@ export default {
       }
 
       this.realBoardItems = temp;
-
       this.setPreview();
     },
     makeRandom(min, max) {
@@ -231,16 +231,28 @@ export default {
       this.setBoard();
       clearInterval(this.setGoTime);
     },
+    goClose(e, title) {
+      if (e.type === "tap" || e.type === "pressup" || e.type === "panstart") {
+   
+        this.clearVisible = false;
+        this.$store.commit('gameSet/setShowAd')
+        clearInterval(this.setPreviewTime);
+
+        if (this.$store.state.gameSet.isShowAd && this.gameLevel > 5) {
+          showInterstitial();
+        } else {
+          this.gameLevel += 1;
+        }
+      }
+    },
     setGameInit() {
+      this.gameParams = this.$store.state.gameSet.stage[this.gameLevel];
       let clientWidth = document.body.clientWidth - 40;
-      this.pWidth = this.pHeight = clientWidth / 4;
+      this.pWidth = this.pHeight = clientWidth / this.gameParams.row;
       this.boardHeight = clientWidth;
       
       this.startVisible = true;
       this.goTime = 3;
-      // this.time = this.previewTime = 3;
-      this.time = this.previewTime = 0;
-      
       // this.setGoTime = setInterval(() => {
       //   this.goTime -= 1;
       //   if (this.goTime === -1) {

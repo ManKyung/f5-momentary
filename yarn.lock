@@ -1889,6 +1889,11 @@ copy-webpack-plugin@^4.0.1:
     p-limit "^1.0.0"
     serialize-javascript "^1.4.0"
 
+cordova-admob-sdk@0.24.1:
+  version "0.24.1"
+  resolved "https://registry.yarnpkg.com/cordova-admob-sdk/-/cordova-admob-sdk-0.24.1.tgz#bf2453d0254d02f4b48b8fe8a5fd4530ae4f1ef9"
+  integrity sha512-gz9h9E/opydsq3nCB2vL40Miy7KG7gcmhkvY1WqiHb015PpaLr50pgmUNBKCTW3/J6Vn+xNcCHPRiJIZLUMX9Q==
+
 cordova-android@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/cordova-android/-/cordova-android-8.1.0.tgz#d9aea62bbe4a4c8d22fdf21616869439cd1c95a0"
@@ -1921,10 +1926,25 @@ cordova-common@^3.2.0:
     underscore "^1.8.3"
     which "^1.3.0"
 
+cordova-plugin-admob-free@0.27.0:
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-admob-free/-/cordova-plugin-admob-free-0.27.0.tgz#1f695043a2ef3545a9457bab624c196f02f32ec2"
+  integrity sha512-4QP89i3maFivk2GN8uAfaPDjwSAwvfrxkJu6pV1+ZJbPSAlp1OhNeXUbXXK8VXNNkoEWqLFQ2TCU1c09ybdATQ==
+
+cordova-plugin-vibration@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-vibration/-/cordova-plugin-vibration-3.1.1.tgz#38fcdd9a7675cfb44d86339c1b2cb129017e9e00"
+  integrity sha512-qgv67Rueo4Pydfant3TwnXeFiN9dl+6lKMM6h5jYg9XewiGAGOr8vfWsTvQssC3m3xMKGS1ap3xPNH+BzZ4RMA==
+
 cordova-plugin-whitelist@^1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/cordova-plugin-whitelist/-/cordova-plugin-whitelist-1.3.4.tgz#31938545c7c3e7de35c20ab08c2c3afa06e8a3f9"
   integrity sha512-EYC5eQFVkoYXq39l7tYKE6lEjHJ04mvTmKXxGL7quHLdFPfJMNzru/UYpn92AOfpl3PQaZmou78C7EgmFOwFQQ==
+
+cordova-promise-polyfill@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/cordova-promise-polyfill/-/cordova-promise-polyfill-0.0.2.tgz#6bb7a949c56a7c318e7f554e6338c8f863e505a8"
+  integrity sha1-a7epScVqfDGOf1VOYzjI+GPlBag=
 
 core-js@^2.4.0, core-js@^2.5.0, core-js@^2.5.1:
   version "2.6.11"

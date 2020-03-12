@@ -9,7 +9,23 @@
   "installed_plugins": {
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "io.cordova.helloworld"
+    },
+    "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "io.cordova.helloworld"
+    },
+    "cordova-plugin-admob-free": {
+      "ADMOB_APP_ID": "ca-app-pub-1963334904140891~4230064796",
+      "PLAY_SERVICES_VERSION": "11.0.4",
+      "PACKAGE_NAME": "io.cordova.helloworld"
     }
   },
-  "dependent_plugins": {}
+  "dependent_plugins": {
+    "cordova-promise-polyfill": {
+      "PACKAGE_NAME": "io.cordova.helloworld"
+    },
+    "cordova-admob-sdk": {
+      "PLAY_SERVICES_VERSION": "11.0.4",
+      "PACKAGE_NAME": "io.cordova.helloworld"
+    }
+  }
 }
