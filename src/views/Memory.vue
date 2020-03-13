@@ -8,7 +8,7 @@
     </v-ons-toolbar>
 
     <div class="content">
-      <div class="pa-5">
+      <div class="px-5">
         <div id="board-real">
           <div
             v-for="item in realBoardItems"
@@ -111,7 +111,7 @@ export default {
   props: {
     level: {
       type: Number,
-      default: 1
+      default: 35
     }
   },
   name: "memory",
@@ -148,13 +148,13 @@ export default {
   methods: {
     setCancel(e){
       if (e.type === "tap" || e.type === "pressup" || e.type === "panstart") {
-        this.timeoverVisible = false;
+        this.$emit('pop-page');
       }
     },
     setRetry(e) {
       if (e.type === "tap" || e.type === "pressup" || e.type === "panstart") {
         this.timeoverVisible = false;
-        this.isWait = false;
+        this.isWait = true;
         this.setGameInit();
       }
     },
@@ -167,33 +167,47 @@ export default {
         for(const i in this.realBoardItems){
           this.realBoardItems[i].isCover = false;
         }
-        this.isWait = false;
+        if(this.time < 1) {
+          this.time = 'START';
+          this.isWait = false;
+        }
         clearInterval(this.setPreviewTime);
 
-        this.setPreviewTime = setInterval(() => {
-          this.time += 1;
-        }, 1000);
+        // this.setPreviewTime = setInterval(() => {
+        //   this.time += 1;
+        // }, 1000);
       }, this.previewTime * 1000);
     },
+    isClear(){
+      // 클리어시
+      this.clearVisible = true;
+      this.$store.dispatch("gameSet/setGameClear", {
+        gameType: this.gameType,
+        level: this.gameLevel,
+        time: this.time
+      });
+      // clearInterval(this.setPreviewTime);
+    },
     clickPiece(e, i) {
-      if(this.isWait){
+      if(this.isWait || this.realBoardItems[i].isAnswer === 'OK'){
         return ;
       }
 
-      if(this.realBoardItems[i].isAnswer){
+      if(this.realBoardItems[i].isAnswer === true){
         this.realBoardItems[i].isCover = true;
+        this.realBoardItems[i].isAnswer = 'OK';
         this.answerCount++;
 
         if(this.answerCount === this.randomArr.length){
-          this.clearVisible = true;
+          this.isClear();
         }
-      } else {
+      } else if(this.realBoardItems[i].isAnswer === false) {
         this.timeoverVisible = true;
         clearInterval(this.setPreviewTime);
-        // this.isWait = true;
       }
     },
     setBoard() {
+      this.isWait = true;
       this.time = this.previewTime = this.gameParams.previewTime;
 
       this.answerCount = 0;
@@ -239,7 +253,8 @@ export default {
         clearInterval(this.setPreviewTime);
 
         if (this.$store.state.gameSet.isShowAd && this.gameLevel > 5) {
-          showInterstitial();
+          // showInterstitial();
+          this.gameLevel += 1;
         } else {
           this.gameLevel += 1;
         }
