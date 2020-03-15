@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import stage from "@/assets/js/stage.js";
 import clickSound from "@/assets/mp3/click.mp3";
-import success from "@/assets/mp3/success.mp3";
 
 Vue.use(Vuex)
 
@@ -12,10 +11,8 @@ export default new Vuex.Store({
       namespaced: true,
       state: {
         clickSound: new Audio(clickSound),
-        successSound: new Audio(success),
         stage: [],
         memoryClear: [],
-        orderClear: [],
         isSound: true,
         isShowAd: true,
         isVibration: true,
@@ -26,6 +23,7 @@ export default new Vuex.Store({
         },
         setStage(state){
           state.stage = stage;
+          console.log(state.stage)
         },
         // setting sound
         setSound(state, value) {
@@ -35,14 +33,18 @@ export default new Vuex.Store({
           }
         },
         // setting success sound
-        setSuccessSound(state) {
-          state.successSound.play();
+        setClickSound(state) {
+          if(state.isSound){
+            state.clickSound.pause();
+            state.clickSound.currentTime = 0;
+            state.clickSound.play();
+          }
         },
         setShowAd(state){
           // 1 minutes = 60000
 
           let getTime = Number(localStorage['adTime']);
-          if((new Date()).getTime() > Number(getTime) + 60000 * 1.5){ // 1 minutes 30 seconds
+          if((new Date()).getTime() > Number(getTime) + 60000 * 1){ // 1 minutes 30 seconds
             localStorage['adTime'] = (new Date()).getTime();
             state.isShowAd = true;
           } else {
@@ -51,30 +53,25 @@ export default new Vuex.Store({
         },
         setGameInit(state){
           state.memoryClear = localStorage['memoryClear'] === undefined ? [] : JSON.parse(localStorage['memoryClear']);
-          state.orderClear = localStorage['orderClear'] === undefined ? [] : JSON.parse(localStorage['orderClear']);
 
           if(localStorage['adTime'] === undefined) {
             localStorage['adTime'] = (new Date()).getTime();
           }
-        }
+        },
+        setClearListReset(state){
+          state.memoryClear = [];
+          localStorage.removeItem('memoryClear');
+        },
       },
       actions: {
         setGameClear(context, obj) {
           let state = context.state;
 
-          if(obj.gameType === 'memory') { // 시간제한 없는것
-            state.memoryClear.push({
-              level: obj.level,
-              time: obj.time,
-            });
-            localStorage['memoryClear'] = JSON.stringify(state.memoryClear);
-          } else {
-            state.orderClear.push({
-              level: obj.level,
-              time: obj.time,
-            });
-            localStorage['orderClear'] = JSON.stringify(state.orderClear);
-          }
+          state.memoryClear.push({
+            level: obj.level,
+            time: obj.time,
+          });
+          localStorage['memoryClear'] = JSON.stringify(state.memoryClear);
         }
       }
     }

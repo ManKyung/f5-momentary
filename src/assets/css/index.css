@@ -1,3 +1,6 @@
+* {
+  font-family: 'TeXGyreAdventor';
+}
 html {
   touch-action: manipulation;
   box-sizing: content-box;
@@ -3929,7 +3932,6 @@ img {
 }
 
 .content-wrap {
-  /* background: radial-gradient(circle, rgba(63,63,65,1) 0%, rgba(28,28,28,1) 100%); */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -3937,9 +3939,11 @@ img {
   height: 100%;
 }
 .game-select-card {
+  margin-top: -60px;
   border:2px solid rgb(124, 117, 100); 
   width:80%; 
   background: rgb(225, 224, 235);
+  max-width: 400px;
 }
 
 .btn-item {
@@ -3951,7 +3955,7 @@ img {
 }
 .btn-item:active {
   transform: translateY(2px);
-  background: #6c5ce7 !important;
+  background: rgb(52, 52, 66) !important;
 }
 .list-item__center, .list-item__right {
   background-image: none !important;
@@ -3967,9 +3971,84 @@ img {
   top: 64px !important;
 }
 
-
-
-
+.slide-in-bck-center {
+	-webkit-animation: slide-in-bck-center 3.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-bck-center 3.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+.slide-in-bck-center2 {
+	-webkit-animation: slide-in-bck-center2 1.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) 2 both;
+	        animation: slide-in-bck-center2 1.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) 2 both;
+}
+/* .slide-in-bck-center3 {
+	-webkit-animation: slide-in-bck-center2 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-bck-center2 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+} */
+@-webkit-keyframes slide-in-bck-center {
+  0% {
+    -webkit-transform: translateZ(600px);
+            transform: translateZ(600px);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+    opacity: 0;
+  }
+}
+@keyframes slide-in-bck-center {
+  0% {
+    -webkit-transform: translateZ(600px);
+            transform: translateZ(600px);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+    opacity: 0;
+  }
+}
+@-webkit-keyframes slide-in-bck-center2 {
+  0% {
+    -webkit-transform: translateZ(600px);
+            transform: translateZ(600px);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+    opacity: 0;
+  }
+}
+@keyframes slide-in-bck-center2 {
+  0% {
+    -webkit-transform: translateZ(600px);
+            transform: translateZ(600px);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+    opacity: 0;
+  }
+}
 
 
 
@@ -3989,30 +4068,6 @@ img {
   /* box-shadow: 0 0 1px 0 #fff inset; */
   /* box-sizing: border-box; */
 }
-.piece-wrap.cover{
-  /* box-shadow: 0 0 1px 0 #fff inset; */
-  /* padding:10px; */
-}
-/* .piece .piece-back {
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  border-radius:10px;
-  border:2px solid #404040;
-  background: #f7cff7 !important;
-}
-.piece .piece-back.on {
-  background: #fff !important;
-}
-.piece .piece-back img {
-  opacity: 1;
-}
-.piece .piece-back img.cover {
-  opacity: 0;
-}
-.piece.success {
-  pointer-events: none;
-} */
 
 .clear-modal-wrap{
   position:fixed;
@@ -4031,40 +4086,6 @@ img {
 }
 .back-button__icon{
   fill: #111;
-}
-
-.btn-group .button {
-  border-radius: 0px;
-  text-align: center;
-  background-color: white;
-  color: #fb8c00; /* White text */
-  border: 1px solid #fb8c00; /* Green border */
-  float: left; /* Float the buttons side by side */
-  width: 50%;
-  font-family: baemin;
-}
-.btn-group .button.on {
-  background-color: #fb8c00; /* Green background */
-  color: white;
-}
-.btn-group .button:active {
-  background-color: #fcaf50; /* Green background */
-  border: 1px solid #fb8c00; /* Green border */
-  color: white;
-}
-
-/* Clear floats (clearfix hack) */
-.btn-group:after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-.btn-group .button:not(:last-child) {
-  border-radius: 3px 0 0 3px;
-}
-.btn-group .button:not(:first-child) {
-  border-radius: 0 3px 3px 0;
 }
 
 .close-modal-wrap {

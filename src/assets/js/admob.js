@@ -1,32 +1,32 @@
 var admob = null;
 
 // 실제
-// var admobId = {
-//   android: {
-//     banner: 'ca-app-pub-1963334904140891/9290819780',
-//     interstitial: 'ca-app-pub-1963334904140891/6664656448',
-//     rewardvideo: 'ca-app-pub-1963334904140891/7786166426',
-//   },
-//   ios: {
-//     banner: 'ca-app-pub-1963334904140891/9613234519',
-//     interstitial: 'ca-app-pub-1963334904140891/3034673284',
-//     rewardvideo: 'ca-app-pub-1963334904140891/5333533567',
-//   }
-// }
-
-// 테스트
 var admobId = {
   android: {
-    banner: 'ca-app-pub-3940256099942544/6300978111',
-    interstitial: 'ca-app-pub-3940256099942544/1033173712',
-    rewardvideo: 'ca-app-pub-3940256099942544/5224354917',
+    banner: 'ca-app-pub-1963334904140891/9290819780',
+    interstitial: 'ca-app-pub-1963334904140891/6664656448',
+    rewardvideo: 'ca-app-pub-1963334904140891/7786166426',
   },
   ios: {
-    banner: 'ca-app-pub-3940256099942544/6300978111',
-    interstitial: 'ca-app-pub-3940256099942544/1033173712',
-    rewardvideo: 'ca-app-pub-3940256099942544/5224354917',
+    banner: 'ca-app-pub-1963334904140891/9613234519',
+    interstitial: 'ca-app-pub-1963334904140891/3034673284',
+    rewardvideo: 'ca-app-pub-1963334904140891/5333533567',
   }
 }
+
+// 테스트
+// var admobId = {
+//   android: {
+//     banner: 'ca-app-pub-3940256099942544/6300978111',
+//     interstitial: 'ca-app-pub-3940256099942544/1033173712',
+//     rewardvideo: 'ca-app-pub-3940256099942544/5224354917',
+//   },
+//   ios: {
+//     banner: 'ca-app-pub-3940256099942544/6300978111',
+//     interstitial: 'ca-app-pub-3940256099942544/1033173712',
+//     rewardvideo: 'ca-app-pub-3940256099942544/5224354917',
+//   }
+// }
 
 export function initAd() {
   admob = window.plugins.admob || window.admob;

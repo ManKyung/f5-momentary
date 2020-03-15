@@ -5,6 +5,16 @@
         <v-ons-back-button class="pl-4"></v-ons-back-button>
       </div>
       <div class="center fs-24 white--text">{{time}}</div>
+      <div class="right" style="padding-top: 10px;">
+        <v-ons-toolbar-button
+          modifier="quiet"
+          class="white--text"
+          @click="setOption"
+        >
+          <v-ons-icon icon="ion-ios-more"
+          ></v-ons-icon>
+        </v-ons-toolbar-button>
+      </div>
     </v-ons-toolbar>
 
     <div class="content">
@@ -16,8 +26,7 @@
             class="piece-wrap"
             :style="`width: ${pWidth}px; height: ${pHeight}px;`"
             v-hammer:tap="(event)=> clickPiece(event, item.id)"
-            v-hammer:press="(event)=> clickPiece(event, item.id)"
-            v-hammer:pan.start="(event)=> clickPiece(event, item.id)"
+            v-hammer:pan="(event)=> clickPiece(event, item.id)"
           >
             <div class="piece" :class="[item.isCover ? 'on' : '']">
             </div>
@@ -29,9 +38,9 @@
     <v-ons-modal :visible="startVisible">
       <div class="clear-modal-wrap w-100 on">
         <div class="fs-48">
-          <div class="mb-3 fs-24">LEVEL {{gameLevel}}</div>
-          {{goTime === 0 ? 'START' : goTime}}
-          <div class=" fs-20 pt-4">Preview : <strong class="reverse--text">{{previewTime}}s</strong></div>
+          <div class="mb-3 fs-24 slide-in-bck-center">LEVEL {{gameLevel}}</div>
+          <div class="slide-in-bck-center2">{{goText}}</div>
+          <div class=" fs-20 pt-4 slide-in-bck-center">Preview : <strong class="reverse--text">{{previewTime}}s</strong></div>
         </div>
       </div>
     </v-ons-modal>
@@ -82,6 +91,39 @@
       </div>
     </v-ons-modal>
 
+    <v-ons-action-sheet
+      :visible.sync="optionVisible"
+      cancelable
+      mask-color="rgba(0, 0, 0, 0.7)"
+    >
+      <v-ons-action-sheet-button class="primary--text" 
+              v-hammer:tap="setSound"
+              v-hammer:press="setSound"
+              v-hammer:pressup="setSound"
+              v-hammer:pan.start="setSound">{{$store.state.gameSet.isSound ? 'SOUND OFF' : 'SOUND ON'}}</v-ons-action-sheet-button>
+      <v-ons-action-sheet-button class="primary--text" 
+              v-hammer:tap="(e)=> goOption(e, 'clear')"
+              v-hammer:press="(e)=> goOption(e, 'clear')"
+              v-hammer:pressup="(e)=> goOption(e, 'clear')"
+              v-hammer:pan.start="(e)=> goOption(e, 'clear')">CLEAR LIST</v-ons-action-sheet-button>
+      <v-ons-action-sheet-button class="primary--text" 
+              v-hammer:tap="(e)=> goOption(e, 'more')"
+              v-hammer:press="(e)=> goOption(e, 'more')"
+              v-hammer:pressup="(e)=> goOption(e, 'more')"
+              v-hammer:pan.start="(e)=> goOption(e, 'more')">MORE GAME</v-ons-action-sheet-button>
+      <v-ons-action-sheet-button class="primary--text" 
+              v-hammer:tap="(e)=> goOption(e, 'review')"
+              v-hammer:press="(e)=> goOption(e, 'review')"
+              v-hammer:pressup="(e)=> goOption(e, 'review')"
+              v-hammer:pan.start="(e)=> goOption(e, 'review')">REVIEW</v-ons-action-sheet-button>
+      <v-ons-action-sheet-button class="primary--text" 
+              v-hammer:tap="(e)=> goOption(e, 'about')"
+              v-hammer:press="(e)=> goOption(e, 'about')"
+              v-hammer:pressup="(e)=> goOption(e, 'about')"
+              v-hammer:pan.start="(e)=> goOption(e, 'about')">ABOUT</v-ons-action-sheet-button>
+      <v-ons-action-sheet-button class="grey--text" @click="optionVisible = false">CLOSE</v-ons-action-sheet-button>
+    </v-ons-action-sheet>
+
   </v-ons-page>
 </template>
 
@@ -96,22 +138,29 @@
   border-radius: 2px;
 }
 .piece.on { 
-  background: #e49be8;
+  background: radial-gradient(circle, #caa9cc 0%, #e989ee 100%);
+  /* background: #e49be8; */
   transition: 0.05s;
   pointer-events: none;
 }
 .piece:active { 
-  background: #e49be8;
+  background: radial-gradient(circle, #caa9cc 0%, #e989ee 100%);
   transition: 0.05s;
 }
 </style>
 
 <script>
+import clearListPage from "@/views/List"
+import { showInterstitial, prepareInterstitial } from "@/assets/js/admob.js";
 export default {
   props: {
+    gameType: {
+      type: String,
+      default: 'memory'
+    },
     level: {
       type: Number,
-      default: 35
+      default: 0
     }
   },
   name: "memory",
@@ -123,17 +172,18 @@ export default {
       boardHeight: 0,
       realBoardItems: [],
       randomArr: [],
-      previewTime: 3,
-      time: 3,
-      goTime: 0,
+      previewTime: 0,
+      time: 0,
+      goText: 0,
       answerCount: 0,
-      setGoTime: null,
       setPreviewTime: null,
       startVisible: false,
       timeoverVisible: false,
       clearVisible: false,
       isWait: true,
-      gameParams: {}
+      gameParams: {},
+      optionVisible: false,
+      interstitialEvent: ['LOAD_FAIL', 'CLOSE', 'EXIT_APP']
     };
   },
   watch: {
@@ -145,7 +195,54 @@ export default {
     this.setGameInit();
     // this.setBoard();
   },
+  mounted() {
+    this.interstitialEvent.forEach((v) => {
+      document.addEventListener(`admob.interstitial.events.${v}`, this.setEventListener)
+    })
+  },
+  destroyed(){
+    this.interstitialEvent.forEach((v) => {
+      document.addEventListener(`admob.interstitial.events.${v}`, this.setEventListener)
+    })
+  },
   methods: {
+    setEventListener(){
+      this.goText = 'READY';
+      this.gameLevel += 1;
+      prepareInterstitial();
+    },
+    setOption(){
+      this.optionVisible = true;
+    },
+    setSound(e) {
+      if (e.type === "tap" || e.type === "pressup" || e.type === "panstart") {
+        this.$store.commit(
+          "gameSet/setSound",
+          !this.$store.state.gameSet.isSound
+        );
+        this.$store.commit(
+          "gameSet/setVibrate",
+          !this.$store.state.gameSet.isVibration
+        );
+      }
+    },
+    goOption(e, title){
+      if (e.type === "tap" || e.type === "pressup" || e.type === "panstart") {
+        if(title === 'clear') {
+          this.optionVisible = false;
+          this.$emit("push-page", {
+            ...clearListPage,
+            onsNavigatorProps: {}
+          });
+        } else if(title === 'more'){
+          location.href = 'https://play.google.com/store/apps/developer?id=F5+Game';
+        } else if(title === 'review'){
+          location.href = 'https://play.google.com/store/apps/details?id=com.f5game.momentary';
+        } else if(title === 'about'){
+          location.href = 'https://f5game.co.kr/home';
+        }
+      }
+    },
     setCancel(e){
       if (e.type === "tap" || e.type === "pressup" || e.type === "panstart") {
         this.$emit('pop-page');
@@ -173,9 +270,6 @@ export default {
         }
         clearInterval(this.setPreviewTime);
 
-        // this.setPreviewTime = setInterval(() => {
-        //   this.time += 1;
-        // }, 1000);
       }, this.previewTime * 1000);
     },
     isClear(){
@@ -186,13 +280,13 @@ export default {
         level: this.gameLevel,
         time: this.time
       });
-      // clearInterval(this.setPreviewTime);
     },
     clickPiece(e, i) {
       if(this.isWait || this.realBoardItems[i].isAnswer === 'OK'){
         return ;
       }
 
+      this.$store.commit("gameSet/setClickSound");
       if(this.realBoardItems[i].isAnswer === true){
         this.realBoardItems[i].isCover = true;
         this.realBoardItems[i].isAnswer = 'OK';
@@ -203,13 +297,11 @@ export default {
         }
       } else if(this.realBoardItems[i].isAnswer === false) {
         this.timeoverVisible = true;
-        clearInterval(this.setPreviewTime);
+        navigator.vibrate(300);
       }
     },
     setBoard() {
       this.isWait = true;
-      this.time = this.previewTime = this.gameParams.previewTime;
-
       this.answerCount = 0;
       this.randomArr = [];
       
@@ -243,18 +335,16 @@ export default {
     goStart() {
       this.startVisible = false;
       this.setBoard();
-      clearInterval(this.setGoTime);
     },
     goClose(e, title) {
       if (e.type === "tap" || e.type === "pressup" || e.type === "panstart") {
-   
+        this.realBoardItems = [];
         this.clearVisible = false;
         this.$store.commit('gameSet/setShowAd')
         clearInterval(this.setPreviewTime);
 
         if (this.$store.state.gameSet.isShowAd && this.gameLevel > 5) {
-          // showInterstitial();
-          this.gameLevel += 1;
+          showInterstitial();
         } else {
           this.gameLevel += 1;
         }
@@ -262,19 +352,20 @@ export default {
     },
     setGameInit() {
       this.gameParams = this.$store.state.gameSet.stage[this.gameLevel];
+      this.time = this.previewTime = this.gameParams.previewTime;
       let clientWidth = document.body.clientWidth - 40;
       this.pWidth = this.pHeight = clientWidth / this.gameParams.row;
       this.boardHeight = clientWidth;
+      this.realBoardItems = [];
       
       this.startVisible = true;
-      this.goTime = 3;
-      // this.setGoTime = setInterval(() => {
-      //   this.goTime -= 1;
-      //   if (this.goTime === -1) {
-      //     this.goStart();
-      //   }
-      // }, 1000);
-          this.goStart();
+      this.goText = 'READY';
+      setTimeout(() => {
+        this.goText = 'GO';
+      }, 1600)
+      setTimeout(() => {
+        this.goStart();
+      }, 3200)
     }
   }
 };

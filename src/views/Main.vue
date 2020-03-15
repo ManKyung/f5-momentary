@@ -1,20 +1,20 @@
 <template>
   <v-ons-page class="main-page">
-    <div class="background main"></div>
+    <div class="background" :style="`background:url(${logoImage});height:100%; background-size:contain; background-repeat:repeat`"></div>
     <div class="content">
       <div class="content-wrap">
         <v-ons-card class="game-select-card text-center pa-5">
-          <div class="pt-7 pb-8"><strong class="fs-24">GAME SELECT</strong></div>
+          <div class="pt-7 pb-8">
+            <strong class="fs-24">MEMORY GAME</strong>
+            <div class="pt-3">
+              <small class="grey--text text--darken-1">Remember the color in a short time!</small>
+            </div>
+          </div>
           <v-ons-button class="btn-item"
             v-hammer:tap="(e)=> goPage(e, 'memory')"
             v-hammer:press="(e)=> goPage(e, 'memory')"
             v-hammer:pressup="(e)=> goPage(e, 'memory')"
-            v-hammer:pan.start="(e)=> goPage(e, 'memory')">MEMORY</v-ons-button>
-          <v-ons-button class="btn-item"
-            v-hammer:tap="(e)=> goPage(e, 'order')"
-            v-hammer:press="(e)=> goPage(e, 'order')"
-            v-hammer:pressup="(e)=> goPage(e, 'order')"
-            v-hammer:pan.start="(e)=> goPage(e, 'order')">ORDER</v-ons-button>
+            v-hammer:pan.start="(e)=> goPage(e, 'memory')">PLAY</v-ons-button>
         </v-ons-card>
       </div>
     </div>
@@ -22,38 +22,34 @@
 </template>
 
 <script>
+import logoImage from '@/assets/img/logo.png';
 import memoryPage from "@/views/Memory"
-import orderPage from "@/views/Order"
-// import { showBanner } from "@/assets/js/admob.js";
+// import orderPage from "@/views/Order"
+import { showBanner } from "@/assets/js/admob.js";
 export default {
   name: 'main-component',
   data(){
     return {
+      logoImage,
       isTimeLimit: false,
       stage: this.$store.state.gameSet.stage,
     }
   },
   mounted(){
-    // setTimeout(() => {
-    //   showBanner()
-    // }, 1000)
+    setTimeout(() => {
+      showBanner()
+    }, 1000)
   },
   methods: {
-    goPage(e, gType){
+    goPage(e, gameType){
       if(e.type === 'tap' || e.type === 'pressup' || e.type === 'panstart'){
-        let params = {};
-        let level = 1;
-
-        // level = this.$store.state.gameSet.limitClear.length + 1 : this.$store.state.gameSet.noLimitClear.length + 1
-
-        params = {
-          level: level,
+        let params = {
+          level: this.$store.state.gameSet[`${gameType}Clear`].length + 1
         }
-
-        if(gType === 'memory'){ 
+        if(gameType === 'memory'){ 
           this.$emit("push-page", {...memoryPage, onsNavigatorProps: params});
-        } else {
-          this.$emit("push-page", {...orderPage, onsNavigatorProps: params});
+        // } else {
+        //   this.$emit("push-page", {...orderPage, onsNavigatorProps: params});
         }
       }
     },

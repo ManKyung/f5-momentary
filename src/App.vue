@@ -38,15 +38,13 @@
 </template>
 
 <script>
-import memoryPage from "@/views/Memory"
 import MainPage from "@/views/Main";
 import { initAd, showInterstitial } from "@/assets/js/admob.js";
 export default {
   name: 'app',
   data() {
     return {
-      // pageStack: [PlayPage],
-      pageStack: [memoryPage],
+      pageStack: [MainPage],
       closeVisible: false,
       isModalOn: false,
     };

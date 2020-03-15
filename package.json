@@ -9,7 +9,7 @@
     "serve": "npm run dev",
     "build": "node build/build.js",
     "build-app": "node build/build.js && cordova run android --device",
-    "build-apk": "node build/build.js && cordova build android",
+    "build-apk": "node build/build.js && cordova build android --release",
     "build:watch": "cross-env WEBPACK_WATCH=true node build/build.js",
     "lint": "eslint --ext .js,.vue src"
   },
@@ -91,7 +91,8 @@
       "cordova-plugin-vibration": {},
       "cordova-plugin-admob-free": {
         "ADMOB_APP_ID": "ca-app-pub-1963334904140891~4230064796"
-      }
+      },
+      "cordova-plugin-splashscreen": {}
     },
     "platforms": [
       "android"
